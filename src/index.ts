@@ -67,9 +67,9 @@ io.on('connection', (socket: any) => {
 io.on('disconnect', (socket: any) => {
   console.log('Disconnected socket!!')
 
-  if (rooms['room1'] && rooms['room1'][data.user.name]) {
-    delete rooms['room1'][data.user.name]
-  }
+  // if (rooms['room1'] && rooms['room1'][data.user.name]) {
+  //   delete rooms['room1'][data.user.name]
+  // }
 
   io.to('room1').emit('update_pointers', rooms['room1'])
 })
