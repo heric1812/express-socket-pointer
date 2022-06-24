@@ -36,6 +36,7 @@ const io = new Server(httpServer, {
     origin: 'https://62b6140a96ff0d0074e2e252--glittering-babka-4ea254.netlify.app/',
     methods: ['GET', 'POST'],
   },
+  transports: ['websocket', 'polling'],
   // cors: true,
   // origins: '*',
 })
