@@ -12,8 +12,8 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import { createServer } from 'http'
-import { Server, Socket } from 'socket.io'
+import {createServer} from 'http'
+import {Server, Socket} from 'socket.io'
 
 const app = express()
 
@@ -32,8 +32,12 @@ const rooms: any = {}
 const httpServer = createServer({}, app)
 const io = new Server(httpServer, {
   path: '/',
-  cors: true,
-  origins: '*',
+  cors: {
+    origin: 'https://62b6140a96ff0d0074e2e252--glittering-babka-4ea254.netlify.app/',
+    methods: ['GET', 'POST'],
+  },
+  // cors: true,
+  // origins: '*',
 })
 
 io.engine.on('connection_error', (err: any) => {
@@ -96,7 +100,7 @@ app.use(bodyParser.raw({type: 'application/vnd.custom-type'}))
 app.use(bodyParser.text({type: 'text/html'}))
 
 app.get('/', async (req: any, res: any) => {
-  res.json({ Hello: 'New World' })
+  res.json({Hello: 'New World'})
 })
 
 // app.use(router)
