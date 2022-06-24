@@ -1,17 +1,22 @@
-const bodyParser = require('body-parser')
-const app = require('express')()
-const http = require('http').Server(app)
-const io = require('socket.io')(http, {
-  path: '/',
-  cors: true,
-  origins: '*',
-})
-const cors = require('cors')
+// const bodyParser = require('body-parser')
+// const app = require('express')()
+// const http = require('http').Server(app)
+// const io = require('socket.io')(http, {
+//   path: '/',
+//   cors: true,
+//   origins: '*',
+// })
+// const cors = require('cors')
 
-// const Server = socketio.Server
-// const Server = require('socket.io').Server
-// const app = express()
-// const router = express.Router()
+///
+import express from 'express'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import { createServer } from 'http'
+import { Server, Socket } from 'socket.io'
+
+const app = express()
+
 const port = process.env.PORT || 3333
 
 // {
@@ -24,12 +29,12 @@ const port = process.env.PORT || 3333
 // }
 const rooms: any = {}
 
-// const httpServer = https.createServer({}, app)
-// const io = new Server(httpServer, {
-//   path: '/',
-//   cors: true,
-//   origins: '*',
-// })
+const httpServer = createServer({}, app)
+const io = new Server(httpServer, {
+  path: '/',
+  cors: true,
+  origins: '*',
+})
 
 io.engine.on('connection_error', (err: any) => {
   console.log(err.req) // the request object
@@ -38,7 +43,7 @@ io.engine.on('connection_error', (err: any) => {
   console.log(err.context) // some additional error context
 })
 
-io.on('connection', (socket: any) => {
+io.on('connection', (socket: Socket) => {
   console.log('Connected socket!!')
 
   socket.on('join_room', (data: any) => {
@@ -69,7 +74,7 @@ io.on('connection', (socket: any) => {
   })
 })
 
-io.on('disconnect', (socket: any) => {
+io.on('disconnect', (socket: Socket) => {
   console.log('Disconnected socket!!')
 
   // if (rooms['room1'] && rooms['room1'][data.user.name]) {
@@ -91,11 +96,11 @@ app.use(bodyParser.raw({type: 'application/vnd.custom-type'}))
 app.use(bodyParser.text({type: 'text/html'}))
 
 app.get('/', async (req: any, res: any) => {
-  res.json({Hello: 'New World'})
+  res.json({ Hello: 'New World' })
 })
 
 // app.use(router)
 
-http.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
