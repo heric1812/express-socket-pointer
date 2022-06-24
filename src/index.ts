@@ -1,13 +1,17 @@
 const bodyParser = require('body-parser')
-const express = require('express')
+const app = require('express')()
+const http = require('http').Server(app)
+const io = require('socket.io')(http, {
+  path: '/',
+  cors: true,
+  origins: '*',
+})
 const cors = require('cors')
-// import http from 'https'
-const Server = require('socket.io').Server
 
 // const Server = socketio.Server
-const app = express()
-const https = require('https').Server(app);
-const router = express.Router()
+// const Server = require('socket.io').Server
+// const app = express()
+// const router = express.Router()
 const port = process.env.PORT || 3333
 
 // {
@@ -20,12 +24,12 @@ const port = process.env.PORT || 3333
 // }
 const rooms: any = {}
 
-const httpServer = https.createServer({}, app)
-const io = new Server(httpServer, {
-  path: '/',
-  cors: true,
-  origins: '*',
-})
+// const httpServer = https.createServer({}, app)
+// const io = new Server(httpServer, {
+//   path: '/',
+//   cors: true,
+//   origins: '*',
+// })
 
 io.engine.on('connection_error', (err: any) => {
   console.log(err.req) // the request object
@@ -86,12 +90,12 @@ app.use(bodyParser.json())
 app.use(bodyParser.raw({type: 'application/vnd.custom-type'}))
 app.use(bodyParser.text({type: 'text/html'}))
 
-router.get('/', async (req: any, res: any) => {
-  res.json({Hello: 'World'})
+app.get('/', async (req: any, res: any) => {
+  res.json({Hello: 'New World'})
 })
 
-app.use(router)
+// app.use(router)
 
-httpServer.listen(port, () => {
+http.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
