@@ -1,10 +1,10 @@
-const bodyParser = required('body-parser')
-const express = required('express')
-const http = required('https')
-const cors = required('cors')
-const Server = required('socket.io').Server
+import bodyParser from 'body-parser'
+import express from 'express'
+import http from 'https'
+import cors from 'cors'
+import socketio from 'socket.io'
 
-// const Server = socketio.Server
+const Server = socketio.Server
 const app = express()
 const router = express.Router()
 const port = process.env.PORT || 3333
