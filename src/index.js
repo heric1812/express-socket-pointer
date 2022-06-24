@@ -1,10 +1,10 @@
-import bodyParser from 'body-parser'
-import express from 'express'
-import http from 'https'
-import cors from 'cors'
-import socketio from 'socket.io'
+const bodyParser = required('body-parser')
+const express = required('express')
+const http = required('https')
+const cors = required('cors')
+const Server = required('socket.io').Server
 
-const Server = socketio.Server
+// const Server = socketio.Server
 const app = express()
 const router = express.Router()
 const port = process.env.PORT || 3333
@@ -17,7 +17,7 @@ const port = process.env.PORT || 3333
 //   },
 //   ...
 // }
-const rooms: any = {}
+const rooms = {}
 
 const httpServer = http.createServer({}, app)
 const io = new Server(httpServer, {
@@ -26,17 +26,17 @@ const io = new Server(httpServer, {
   origins: '*',
 })
 
-io.engine.on('connection_error', (err: any) => {
+io.engine.on('connection_error', (err) => {
   console.log(err.req) // the request object
   console.log(err.code) // the error code, for example 1
   console.log(err.message) // the error message, for example "Session ID unknown"
   console.log(err.context) // some additional error context
 })
 
-io.on('connection', (socket: any) => {
+io.on('connection', (socket) => {
   console.log('Connected socket!!')
 
-  socket.on('join_room', (data: any) => {
+  socket.on('join_room', (data) => {
     console.log('join_room', data)
     if (!rooms[data.room]) rooms[data.room] = {}
 
@@ -47,7 +47,7 @@ io.on('connection', (socket: any) => {
     socket.join(data.room)
   })
 
-  socket.on('update_position', (data: any) => {
+  socket.on('update_position', (data) => {
     if (rooms[data.room]) {
       rooms[data.room][data.user.name] = data.user
     }
@@ -55,7 +55,7 @@ io.on('connection', (socket: any) => {
     io.to(data.room).emit('update_pointers', rooms[data.room])
   })
 
-  socket.on('remove_position', (data: any) => {
+  socket.on('remove_position', (data) => {
     if (rooms[data.room] && rooms[data.room][data.user.name]) {
       delete rooms[data.room][data.user.name]
     }
@@ -64,7 +64,7 @@ io.on('connection', (socket: any) => {
   })
 })
 
-io.on('disconnect', (socket: any) => {
+io.on('disconnect', (socket) => {
   console.log('Disconnected socket!!')
 
   // if (rooms['room1'] && rooms['room1'][data.user.name]) {
@@ -85,7 +85,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.raw({type: 'application/vnd.custom-type'}))
 app.use(bodyParser.text({type: 'text/html'}))
 
-router.get('/', async (req: any, res: any) => {
+router.get('/', async (req, res) => {
   res.json({Hello: 'World'})
 })
 
